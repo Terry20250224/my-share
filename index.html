@@ -6,4 +6,140 @@
 <title>個人分享空間</title>
 <style>
 :root{
-  --bg:#fafaf7; --fg:#1f2024; --muted:#6b6
+  --bg:#fafaf7;
+  --fg:#1f2024;
+  --muted:#6b6f76;
+  --card:#ffffff;
+  --border:#e8e6df;
+  --accent:#8b7355;
+  --accent-soft:#f4efe8;
+  --shadow:0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#16161a; --fg:#ececec; --muted:#9a9a9f;
+    --card:#1f1f24; --border:#2a2a30;
+    --accent:#d4b896; --accent-soft:#2a241c;
+    --shadow:0 1px 3px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+a:hover{border-bottom-color:var(--accent)}
+.container{max-width:760px;margin:0 auto;padding:64px 24px 96px}
+.hero{text-align:center;margin-bottom:72px}
+.avatar{width:96px;height:96px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-size:42px;font-weight:300;margin-bottom:20px;border:2px solid var(--border)}
+.hero h1{font-size:36px;font-weight:600;letter-spacing:.5px;margin-bottom:12px}
+.hero .subtitle{color:var(--muted);font-size:16px;max-width:520px;margin:0 auto}
+.section{margin-bottom:56px}
+.section-title{font-size:14px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.bio{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;box-shadow:var(--shadow);font-size:16px;color:var(--fg)}
+.update-list{display:flex;flex-direction:column;gap:12px}
+.update{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 22px;box-shadow:var(--shadow);display:flex;gap:16px;align-items:flex-start}
+.update-date{font-size:13px;color:var(--muted);min-width:80px;padding-top:2px;font-variant-numeric:tabular-nums}
+.update-body{flex:1}
+.update-title{font-weight:500;margin-bottom:4px}
+.update-desc{font-size:14px;color:var(--muted)}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.link{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border)}
+.link:hover{border-color:var(--accent);background:var(--accent-soft)}
+.link-icon{width:36px;height:36px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.link-body{flex:1;min-width:0}
+.link-name{font-weight:500;font-size:15px;margin-bottom:2px;color:var(--fg)}
+.link-desc{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+footer{text-align:center;margin-top:80px;padding-top:32px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+footer p{margin-bottom:4px}
+@media (max-width:600px){
+  .container{padding:40px 20px 64px}
+  .hero{margin-bottom:48px}
+  .hero h1{font-size:28px}
+  .update{flex-direction:column;gap:6px}
+  .update-date{min-width:auto}
+  .links{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<main class="container">
+  <header class="hero">
+    <div class="avatar">我</div>
+    <h1>個人分享空間</h1>
+    <p class="subtitle">歡迎來到我的小天地。分享生活點滴、學習筆記、覺得好用嘅工具同連結。</p>
+  </header>
+
+  <section class="section">
+    <h2 class="section-title">關於我</h2>
+    <div class="bio">
+      你好,我係 Terry 👋 呢度係我嘅個人分享空間,我會將日常學到嘅嘢、遇到嘅好工具、生活上有趣嘅發現整理喺度,希望對你都有啲用。如果你喺度搵到啲嘢幫到你,就係我最大嘅收穫。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">最新動態</h2>
+    <div class="update-list">
+      <div class="update">
+        <span class="update-date">2026-06-26</span>
+        <div class="update-body">
+          <div class="update-title">🚀 個人分享網站正式上線</div>
+          <div class="update-desc">用 GitHub Pages 起咗呢個全新嘅個人分享空間,日後會定期更新內容。</div>
+        </div>
+      </div>
+      <div class="update">
+        <span class="update-date">2026-06-20</span>
+        <div class="update-body">
+          <div class="update-title">📚 整理咗一份常用工具清單</div>
+          <div class="update-desc">搜集咗一啲日常好用嘅網站同 App,稍後會整理成文章分享。</div>
+        </div>
+      </div>
+      <div class="update">
+        <span class="update-date">2026-06-15</span>
+        <div class="update-body">
+          <div class="update-title">🎯 開始學習新嘅技術棧</div>
+          <div class="update-desc">開始研究自動化工具,希望可以將日常重複嘅工序簡化。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">實用連結</h2>
+    <div class="links">
+      <a class="link" href="https://github.com/Terry20250224" target="_blank" rel="noopener">
+        <div class="link-icon">🐙</div>
+        <div class="link-body">
+          <div class="link-name">GitHub</div>
+          <div class="link-desc">睇下我嘅開源項目</div>
+        </div>
+      </a>
+      <a class="link" href="https://terrywsc123.zo.computer" target="_blank" rel="noopener">
+        <div class="link-icon">💻</div>
+        <div class="link-body">
+          <div class="link-name">Zo Computer</div>
+          <div class="link-desc">我嘅 AI 工作台</div>
+        </div>
+      </a>
+      <a class="link" href="https://terrywsc123.zo.space" target="_blank" rel="noopener">
+        <div class="link-icon">🔍</div>
+        <div class="link-body">
+          <div class="link-name">多合一搜尋</div>
+          <div class="link-desc">一個輸入框搞掂多個搜尋引擎</div>
+        </div>
+      </a>
+      <a class="link" href="https://zo.pub/terrywsc123/search-portal/search.html" target="_blank" rel="noopener">
+        <div class="link-icon">🌐</div>
+        <div class="link-body">
+          <div class="link-name">搜尋網頁永久版</div>
+          <div class="link-desc">zo.pub 託管嘅永久連結</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Terry · 個人分享空間</p>
+    <p>Built with GitHub Pages</p>
+  </footer>
+</main>
+</body>
+</html>
