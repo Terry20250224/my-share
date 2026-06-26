@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>私房流動電視台 · Terry</title>
+<style>
+:root{
+  --bg:#fafaf7;
+  --fg:#1f2024;
+  --muted:#6b6f76;
+  --card:#ffffff;
+  --border:#e8e6df;
+  --accent:#8b7355;
+  --accent-soft:#f4efe8;
+  --shadow:0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
+}
+:root[data-theme=light]{
+  --bg:#fafaf7; --fg:#1f2024; --muted:#6b6f76;
+  --card:#ffffff; --border:#e8e6df;
+  --accent:#8b7355; --accent-soft:#f4efe8;
+  --shadow:0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
+}
+:root[data-theme=dark]{
+  --bg:#16161a; --fg:#ececec; --muted:#9a9a9f;
+  --card:#1f1f24; --border:#2a2a30;
+  --accent:#d4b896; --accent-soft:#2a241c;
+  --shadow:0 1px 3px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+}
+.theme-toggle{position:fixed;top:20px;right:20px;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--fg);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s,background .2s;z-index:100;font-family:inherit}
+.theme-toggle:hover{transform:scale(1.05)}
+.theme-toggle:focus{outline:none;box-shadow:var(--shadow),0 0 0 3px var(--accent-soft)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+a:hover{border-bottom-color:var(--accent)}
+.container{max-width:780px;margin:0 auto;padding:64px 24px 96px}
+.remote-hero{text-align:center;margin-bottom:48px;padding:32px 24px;background:linear-gradient(135deg,var(--accent-soft),transparent);border-radius:16px;border:1px solid var(--border)}
+.remote-logo{font-size:56px;margin-bottom:12px}
+.remote-hero h1{font-size:34px;font-weight:600;letter-spacing:.5px;margin-bottom:8px}
+.remote-hero .subtitle{color:var(--muted);font-size:15px;max-width:520px;margin:0 auto}
+.subscribe-box{background:var(--card);border:2px solid var(--accent);border-radius:16px;padding:24px;box-shadow:var(--shadow);margin-bottom:56px}
+.subscribe-box .section-title{margin-top:0;border-bottom-color:var(--accent);color:var(--accent)}
+.subscribe-url{display:flex;align-items:center;gap:10px;background:var(--accent-soft);border-radius:10px;padding:14px 16px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:var(--accent);overflow-x:auto;white-space:nowrap;border:1px dashed var(--accent)}
+.subscribe-url span{flex:1;min-width:0}
+.copy-btn{flex-shrink:0;background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;transition:transform .15s;font-family:inherit}
+.copy-btn:hover{transform:scale(1.04)}
+.copy-btn.copied{background:#22c55e}
+.subscribe-hint{margin-top:12px;font-size:13px;color:var(--muted)}
+.section{margin-bottom:56px}
+.section-title{font-size:14px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.channel-group{margin-bottom:32px}
+.group-title{font-size:15px;font-weight:600;color:var(--fg);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.group-count{font-size:12px;color:var(--muted);font-weight:400}
+.channel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.channel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform .15s,border-color .15s;border-bottom:1px solid var(--border)}
+.channel:hover{transform:translateY(-2px);border-color:var(--accent)}
+.channel-icon{width:42px;height:42px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.channel-body{flex:1;min-width:0}
+.channel-name{font-weight:500;font-size:15px;margin-bottom:2px;color:var(--fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.channel-meta{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.channel-action{flex-shrink:0;font-size:12px;color:var(--accent);font-weight:500;padding:6px 10px;border:1px solid var(--accent);border-radius:6px;transition:background .2s}
+.channel:hover .channel-action{background:var(--accent-soft)}
+footer{text-align:center;margin-top:80px;padding-top:32px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+footer p{margin-bottom:4px}
+@media (max-width:600px){
+  .container{padding:40px 20px 64px}
+  .remote-hero h1{font-size:26px}
+  .remote-logo{font-size:44px}
+  .channel-grid{grid-template-columns:1fr}
+  .theme-toggle{top:12px;right:12px;width:36px;height:36px;font-size:16px}
+}
+</style>
+</head>
+<body>
+<button class="theme-toggle" type="button" aria-label="切換深淺色模式" title="切換深淺色模式">
+<span id="themeIcon">🌙</span>
+</button>
+<main class="container">
+  <header class="remote-hero">
+    <div class="remote-logo">📺</div>
+    <h1>私房流動電視台</h1>
+    <p class="subtitle">每日自動更新嘅極速 IPTV 頻道源 · 專屬 TiviMate 訂閱</p>
+  </header>
+
+  <section class="subscribe-box">
+    <h2 class="section-title">📡 TiviMate 訂閱連結</h2>
+    <div class="subscribe-url">
+      <span id="subUrl">https://terry20250224.github.io/my-share/my-channels.m3u</span>
+      <button class="copy-btn" id="copyBtn" type="button">複製</button>
+    </div>
+    <p class="subscribe-hint">複製後貼入 TiviMate → 設定 → 播放列表 → 加入 URL → 即時訂閱</p>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">📺 頻道列表</h2>
+    <div id="channelList">載入中...</div>
+  </section>
+
+  <footer>
+    <p>© 2026 Terry · 私房流動電視台</p>
+    <p>每日 00:00 HKT 自動更新 · 數據源:iptv-org + gaotianliuyun(免費 GitHub 公開源)</p>
+    <p><a href="./index.html">← 返回主頁</a></p>
+  </footer>
+</main>
+<script>
+(function(){
+  var KEY="theme";
+  var root=document.documentElement;
+  function apply(theme){
+    root.setAttribute("data-theme", theme);
+    var icon=document.getElementById("themeIcon");
+    if(icon) icon.textContent = theme==="dark" ? "☀️" : "🌙";
+    try{localStorage.setItem(KEY,theme);}catch(e){}
+  }
+  var saved;
+  try{saved=localStorage.getItem(KEY);}catch(e){}
+  if(saved!=="dark" && saved!=="light"){
+    saved = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  apply(saved);
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded", bindAll);
+  } else {
+    bindAll();
+  }
+  function bindAll(){
+    var btn=document.querySelector(".theme-toggle");
+    if(btn) btn.addEventListener("click", function(){
+      apply(root.getAttribute("data-theme")==="dark" ? "light" : "dark");
+    });
+    var copyBtn=document.getElementById("copyBtn");
+    var subUrl=document.getElementById("subUrl");
+    if(copyBtn && subUrl){
+      copyBtn.addEventListener("click", function(){
+        var txt=subUrl.textContent;
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(txt).then(ok, fail);
+        } else {
+          fallback(txt);
+        }
+        function ok(){
+          copyBtn.textContent="已複製 ✓";
+          copyBtn.classList.add("copied");
+          setTimeout(reset, 1800);
+        }
+        function fail(){ fallback(txt); }
+        function reset(){
+          copyBtn.textContent="複製";
+          copyBtn.classList.remove("copied");
+        }
+        function fallback(t){
+          var ta=document.createElement("textarea");
+          ta.value=t; ta.style.position="fixed"; ta.style.opacity="0";
+          document.body.appendChild(ta); ta.select();
+          try{ document.execCommand("copy"); ok(); }catch(e){}
+          document.body.removeChild(ta);
+        }
+      });
+    }
+    loadChannels();
+  }
+  function loadChannels(){
+    var list=document.getElementById("channelList");
+    if(!list) return;
+    fetch("./my-channels.m3u", {cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.text(); })
+      .then(function(text){
+        var groups={};
+        var lines=text.split(/?
+/);
+        for(var i=0;i<lines.length;i++){
+          var line=lines[i];
+          if(line.indexOf("#EXTINF")!==0) continue;
+          var commaIdx=line.lastIndexOf(",");
+          var name=commaIdx>=0 ? line.substring(commaIdx+1).trim() : "未命名";
+          var gtMatch=line.match(/group-title="([^"]*)"/);
+          var grp=gtMatch ? gtMatch[1] : "其他";
+          var url="";
+          for(var j=i+1;j<Math.min(i+3,lines.length);j++){
+            var ln=lines[j].trim();
+            if(ln && ln.charAt(0)!=="#"){ url=ln; break; }
+          }
+          if(!url) continue;
+          if(!groups[grp]) groups[grp]=[];
+          groups[grp].push({name:name,url:url});
+        }
+        render(list, groups);
+      })
+      .catch(function(err){
+        list.innerHTML="<p style='color:var(--muted)'>暫時未抓到頻道。請稍後再試,或查看 GitHub Actions 日誌。</p><p style='color:var(--muted);font-size:12px;margin-top:8px'>錯誤:"+err.message+"</p>";
+      });
+  }
+  function render(list, groups){
+    var order=["ViuTV","港台電視","CCTV-5 系列","廣東體育","芒果 / 湖南衛視"];
+    var orderedKeys=Object.keys(groups).sort(function(a,b){
+      var ai=order.indexOf(a), bi=order.indexOf(b);
+      if(ai===-1 && bi===-1) return a.localeCompare(b);
+      if(ai===-1) return 1;
+      if(bi===-1) return -1;
+      return ai-bi;
+    });
+    var html="";
+    orderedKeys.forEach(function(g){
+      var items=groups[g];
+      html+='<div class="channel-group">';
+      html+='<div class="group-title">'+esc(g)+' <span class="group-count">('+items.length+' 條)</span></div>';
+      html+='<div class="channel-grid">';
+      items.forEach(function(it){
+        var icon=g.indexOf("CCTV")===0 ? "📡" : (g.indexOf("體育")>=0 ? "⚽" : (g.indexOf("衛視")>=0 ? "🎬" : "📺"));
+        var host=hostOf(it.url);
+        html+='<div class="channel" data-url="'+esc(it.url)+'" data-name="'+esc(it.name)+'">';
+        html+='<div class="channel-icon">'+icon+'</div>';
+        html+='<div class="channel-body">';
+        html+='<div class="channel-name">'+esc(it.name)+'</div>';
+        html+='<div class="channel-meta">'+esc(host)+'</div>';
+        html+='</div>';
+        html+='<div class="channel-action">▶ 播放</div>';
+        html+='</div>';
+      });
+      html+='</div></div>';
+    });
+    list.innerHTML=html;
+    bindChannelClicks();
+  }
+  function bindChannelClicks(){
+    document.querySelectorAll(".channel").forEach(function(el){
+      el.addEventListener("click", function(){
+        var url=el.getAttribute("data-url");
+        var name=el.getAttribute("data-name");
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(url).then(function(){
+            flash(el, "已複製 ✓");
+          }, function(){ openPlayer(url); });
+        } else {
+          openPlayer(url);
+        }
+        function openPlayer(u){
+          var w=window.open();
+          if(w){ w.document.write("<title>"+esc(name)+"</title><video src='"+esc(u)+"' controls autoplay style='width:100%;height:100vh;background:#000'></video>"); }
+        }
+      });
+    });
+  }
+  function flash(el, msg){
+    var act=el.querySelector(".channel-action");
+    if(!act) return;
+    var orig=act.textContent;
+    act.textContent=msg;
+    setTimeout(function(){ act.textContent=orig; }, 1400);
+  }
+  function esc(s){
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+  function hostOf(u){
+    try{ return new URL(u).hostname; }catch(e){ return ""; }
+  }
+})();
+</script>
+</body>
+</html>
