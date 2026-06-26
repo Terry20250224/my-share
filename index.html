@@ -15,14 +15,21 @@
   --accent-soft:#f4efe8;
   --shadow:0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
 }
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#16161a; --fg:#ececec; --muted:#9a9a9f;
-    --card:#1f1f24; --border:#2a2a30;
-    --accent:#d4b896; --accent-soft:#2a241c;
-    --shadow:0 1px 3px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
-  }
+:root[data-theme="light"]{
+  --bg:#fafaf7; --fg:#1f2024; --muted:#6b6f76;
+  --card:#ffffff; --border:#e8e6df;
+  --accent:#8b7355; --accent-soft:#f4efe8;
+  --shadow:0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
 }
+:root[data-theme="dark"]{
+  --bg:#16161a; --fg:#ececec; --muted:#9a9a9f;
+  --card:#1f1f24; --border:#2a2a30;
+  --accent:#d4b896; --accent-soft:#2a241c;
+  --shadow:0 1px 3px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+}
+.theme-toggle{position:fixed;top:20px;right:20px;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--fg);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s,background .2s;z-index:100;font-family:inherit}
+.theme-toggle:hover{transform:scale(1.05)}
+.theme-toggle:focus{outline:none;box-shadow:var(--shadow),0 0 0 3px var(--accent-soft)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
 a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
@@ -57,10 +64,14 @@ footer p{margin-bottom:4px}
   .update{flex-direction:column;gap:6px}
   .update-date{min-width:auto}
   .links{grid-template-columns:1fr}
+  .theme-toggle{top:12px;right:12px;width:36px;height:36px;font-size:16px}
 }
 </style>
 </head>
 <body>
+<button class="theme-toggle" type="button" aria-label="切換深淺色模式" title="切換深淺色模式">
+  <span id="themeIcon">🌙</span>
+</button>
 <main class="container">
   <header class="hero">
     <div class="avatar">我</div>
@@ -141,5 +152,34 @@ footer p{margin-bottom:4px}
     <p>Built with GitHub Pages</p>
   </footer>
 </main>
+<script>
+(function(){
+  var KEY = 'theme';
+  var root = document.documentElement;
+  function apply(theme){
+    root.setAttribute('data-theme', theme);
+    var icon = document.getElementById('themeIcon');
+    if (icon) icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    try { localStorage.setItem(KEY, theme); } catch(e){}
+  }
+  var saved;
+  try { saved = localStorage.getItem(KEY); } catch(e){}
+  if (saved !== 'dark' && saved !== 'light') {
+    saved = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  apply(saved);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindToggle);
+  } else {
+    bindToggle();
+  }
+  function bindToggle(){
+    var btn = document.querySelector('.theme-toggle');
+    if (btn) btn.addEventListener('click', function(){
+      apply(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+  }
+})();
+</script>
 </body>
 </html>
