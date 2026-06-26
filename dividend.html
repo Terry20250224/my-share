@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>配息與資產看板 · 個人分享空間</title>
+<style>
+:root{
+  --bg:#fafaf7;
+  --fg:#1f2024;
+  --muted:#6b6f76;
+  --card:#ffffff;
+  --border:#e8e6df;
+  --accent:#8b7355;
+  --accent-soft:#f4efe8;
+  --shadow:0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
+  --positive:#5a7a4e;
+  --warning:#b8893e;
+}
+[data-theme="dark"]{
+  --bg:#16161a;
+  --fg:#ececec;
+  --muted:#9a9a9f;
+  --card:#1f1f24;
+  --border:#2a2a30;
+  --accent:#d4b896;
+  --accent-soft:#2a241c;
+  --shadow:0 1px 3px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  --positive:#8fb37a;
+  --warning:#e0b574;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;transition:background-color .2s,color .2s}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+a:hover{border-bottom-color:var(--accent)}
+.theme-toggle{position:fixed;top:20px;right:20px;width:40px;height:40px;border-radius:50%;background:var(--card);border:1px solid var(--border);color:var(--fg);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;box-shadow:var(--shadow);z-index:100;transition:transform .2s,background .2s}
+.theme-toggle:hover{transform:scale(1.05)}
+.back-link{position:fixed;top:20px;left:20px;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--fg);font-size:14px;box-shadow:var(--shadow);transition:border-color .2s,background .2s;border-bottom:1px solid var(--border)}
+.back-link:hover{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.container{max-width:920px;margin:0 auto;padding:64px 24px 96px}
+.page-header{margin-bottom:48px}
+.page-header h1{font-size:32px;font-weight:600;letter-spacing:.5px;margin-bottom:8px}
+.page-header .subtitle{color:var(--muted);font-size:15px;max-width:620px}
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:40px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow)}
+.kpi-label{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px}
+.kpi-value{font-size:24px;font-weight:600;color:var(--fg);font-variant-numeric:tabular-nums}
+.kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.section{margin-bottom:48px}
+.section-title{font-size:14px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th,td{padding:14px 18px;text-align:left;font-size:14px;border-bottom:1px solid var(--border)}
+th{background:var(--accent-soft);color:var(--muted);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:1px}
+tr:last-child td{border-bottom:none}
+td{color:var(--fg);font-variant-numeric:tabular-nums}
+.ticker{font-weight:600;color:var(--accent)}
+.notes-cell{color:var(--muted);font-size:13px;max-width:200px}
+.countdown{font-size:13px;color:var(--warning);font-weight:500}
+.countdown.urgent{color:var(--positive)}
+.badge{display:inline-block;padding:2px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:500}
+.footnote{font-size:13px;color:var(--muted);margin-top:12px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:8px;line-height:1.6}
+footer{text-align:center;margin-top:64px;padding-top:32px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+@media (max-width:600px){
+  .container{padding:80px 16px 64px}
+  .page-header h1{font-size:26px}
+  .table-wrap{overflow-x:auto}
+  table{min-width:560px}
+  th,td{padding:10px 12px;font-size:13px}
+  .theme-toggle{width:36px;height:36px;font-size:16px}
+  .back-link{font-size:13px;padding:6px 10px}
+}
+</style>
+</head>
+<body>
+<a class="back-link" href="./index.html">← 返主頁</a>
+<button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌙</button>
+
+<main class="container">
+  <header class="page-header">
+    <h1>📊 配息與資產看板</h1>
+    <p class="subtitle">追蹤我關注嘅 YieldMax 家族高息 ETF 嘅下次除息日同派息資料。資料由我手動更新,純粹作為個人資產參考。</p>
+  </header>
+
+  <section class="kpi-strip">
+    <div class="kpi">
+      <div class="kpi-label">關注 ETF 數</div>
+      <div class="kpi-value" id="kpi-count">—</div>
+      <div class="kpi-sub">YieldMax 系列</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">下一個除息日</div>
+      <div class="kpi-value" id="kpi-next-date">—</div>
+      <div class="kpi-sub" id="kpi-next-name">計算中…</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">倒數</div>
+      <div class="kpi-value" id="kpi-countdown">—</div>
+      <div class="kpi-sub">距離下次除息</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">平均配息金額</div>
+      <div class="kpi-value" id="kpi-avg">—</div>
+      <div class="kpi-sub">最近一次除息</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">關注清單</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>代號</th>
+            <th>名稱</th>
+            <th>殖利率</th>
+            <th>最近配息</th>
+            <th>下次除息</th>
+            <th>倒數</th>
+            <th>備註</th>
+          </tr>
+        </thead>
+        <tbody id="dividend-table">
+          <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px">載入中…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="footnote">
+      📌 數據來源:由我手動維護嘅 <code>dividend-data.json</code>(純靜態 JSON,無需任何 API)。
+      <br>
+      🛠️ 下次更新時機:每次派息後我會手動更新呢個 JSON,再 push 到 GitHub 就會自動生效。
+      <br>
+      ⚠️ 免責聲明:本站只係個人紀錄工具,所有數據僅供參考,唔構成任何投資建議。
+    </p>
+  </section>
+
+  <footer>
+    <p>© 2026 Terry · 個人分享空間</p>
+    <p>Built with GitHub Pages · 100% 免費方案</p>
+  </footer>
+</main>
+
+<script>
+// === 主題切換(與主頁共享邏輯) ===
+(function(){
+  const saved = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = saved || (prefersDark ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeToggle');
+  btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+  btn.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    btn.textContent = next === 'dark' ? '☀️' : '🌙';
+  });
+})();
+
+// === 倒數計算工具 ===
+function daysUntil(dateStr){
+  const target = new Date(dateStr + 'T00:00:00');
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  const diff = target - now;
+  return Math.ceil(diff / (1000*60*60*24));
+}
+function formatCountdown(days){
+  if (days < 0) return '已過期';
+  if (days === 0) return '🔔 今日除息';
+  if (days === 1) return '⚡ 明日除息';
+  if (days <= 7) return `仲有 ${days} 日`;
+  if (days <= 30) return `仲有 ${days} 日`;
+  return `${days} 日`;
+}
+
+// === 載入資料 + 渲染 ===
+fetch('./dividend-data.json')
+  .then(r => r.ok ? r.json() : Promise.reject('HTTP '+r.status))
+  .then(data => {
+    // KPI
+    document.getElementById('kpi-count').textContent = data.length;
+    const sorted = [...data].sort((a,b) => new Date(a.nextExDate) - new Date(b.nextExDate));
+    const nearest = sorted[0];
+    document.getElementById('kpi-next-name').textContent = nearest.ticker;
+    document.getElementById('kpi-next-date').textContent = nearest.nextExDate.slice(5);
+    const avg = (data.reduce((s,e) => s + (e.lastDividend||0), 0) / data.length).toFixed(2);
+    document.getElementById('kpi-avg').textContent = '$' + avg;
+
+    // 表格
+    const tbody = document.getElementById('dividend-table');
+    tbody.innerHTML = sorted.map(e => {
+      const days = daysUntil(e.nextExDate);
+      const cd = formatCountdown(days);
+      const urgentClass = days <= 7 ? 'urgent' : '';
+      return `
+        <tr>
+          <td><span class="ticker">${e.ticker}</span></td>
+          <td>${e.name}</td>
+          <td><span class="badge">${e.yield}</span></td>
+          <td>$${e.lastDividend.toFixed(2)}</td>
+          <td>${e.nextExDate}</td>
+          <td><span class="countdown ${urgentClass}">${cd}</span></td>
+          <td class="notes-cell">${e.notes || '—'}</td>
+        </tr>
+      `;
+    }).join('');
+
+    // 總 KPI 倒數
+    const nearestDays = daysUntil(nearest.nextExDate);
+    document.getElementById('kpi-countdown').textContent = nearestDays <= 0 ? '今日!' : nearestDays + ' 日';
+  })
+  .catch(err => {
+    document.getElementById('dividend-table').innerHTML =
+      `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px">❌ 載入失敗:${err}<br><small>請確認 dividend-data.json 已 push 到 main 分支</small></td></tr>`;
+  });
+
+// === 每分鐘刷新倒數 ===
+setInterval(() => {
+  const cd = document.getElementById('kpi-countdown');
+  if (cd.textContent === '—') return;
+  fetch('./dividend-data.json')
+    .then(r => r.json())
+    .then(data => {
+      const sorted = [...data].sort((a,b) => new Date(a.nextExDate) - new Date(b.nextExDate));
+      const nearest = sorted[0];
+      const days = daysUntil(nearest.nextExDate);
+      cd.textContent = days <= 0 ? '今日!' : days + ' 日';
+    })
+    .catch(() => {});
+}, 60000);
+</script>
+</body>
+</html>
