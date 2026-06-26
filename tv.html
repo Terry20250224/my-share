@@ -122,7 +122,7 @@ footer p{margin-bottom:4px}
   if(document.readyState==="loading"){
     document.addEventListener("DOMContentLoaded", bindAll);
   } else {
-    bindAll();
+    setTimeout(bindAll, 0);
   }
   function bindAll(){
     var btn=document.querySelector(".theme-toggle");
