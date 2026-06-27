@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>香港在地情報站 · Terry</title>
+<style>
+:root{
+  --bg:#fafaf7; --fg:#1f2024; --muted:#6b6f76;
+  --card:#ffffff; --border:#e8e6df;
+  --accent:#8b7355; --accent-soft:#f4efe8;
+  --shadow:0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
+  --tag-urgent:#c0392b; --tag-urgent-bg:#fde8e6;
+  --tag-traffic:#d97706; --tag-traffic-bg:#fef3c7;
+  --tag-power:#7c2d12; --tag-power-bg:#fed7aa;
+  --tag-local:#1d4ed8; --tag-local-bg:#dbeafe;
+}
+:root[data-theme="dark"]{
+  --bg:#16161a; --fg:#ececec; --muted:#9a9a9f;
+  --card:#1f1f24; --border:#2a2a30;
+  --accent:#d4b896; --accent-soft:#2a241c;
+  --shadow:0 1px 3px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  --tag-urgent:#f87171; --tag-urgent-bg:#3f1d1d;
+  --tag-traffic:#fbbf24; --tag-traffic-bg:#3a2a10;
+  --tag-power:#fdba74; --tag-power-bg:#3a2410;
+  --tag-local:#93c5fd; --tag-local-bg:#1e2a3a;
+}
+.theme-toggle{position:fixed;top:20px;right:20px;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--fg);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s;font-family:inherit;z-index:100}
+.theme-toggle:hover{transform:scale(1.05)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+a:hover{border-bottom-color:var(--accent)}
+.container{max-width:1100px;margin:0 auto;padding:64px 24px 96px}
+.hero{text-align:center;margin-bottom:48px;padding:32px 24px;background:linear-gradient(135deg,var(--accent-soft),transparent);border-radius:16px;border:1px solid var(--border)}
+.hero-logo{font-size:56px;margin-bottom:12px}
+.hero h1{font-size:34px;font-weight:600;letter-spacing:.5px;margin-bottom:8px}
+.hero .subtitle{color:var(--muted);font-size:15px;max-width:620px;margin:0 auto}
+.meta-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:32px;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow)}
+.meta-info{font-size:13px;color:var(--muted)}
+.meta-info strong{color:var(--fg);font-weight:600}
+.meta-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--accent);background:var(--accent);color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;font-family:inherit;transition:transform .15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{transform:scale(1.03)}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.ghost:hover{background:var(--accent-soft)}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.legend-item{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);padding:4px 10px;background:var(--card);border:1px solid var(--border);border-radius:14px}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+.dot-traffic{background:var(--tag-traffic)}
+.dot-power{background:var(--tag-power)}
+.dot-local{background:var(--tag-local)}
+.dot-urgent{background:var(--tag-urgent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .15s,border-color .15s;text-decoration:none;color:inherit;cursor:pointer;min-height:140px}
+.card:hover{transform:translateY(-2px);border-color:var(--accent)}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:10px;letter-spacing:.5px;text-transform:uppercase}
+.tag-traffic{background:var(--tag-traffic-bg);color:var(--tag-traffic)}
+.tag-power{background:var(--tag-power-bg);color:var(--tag-power)}
+.tag-local{background:var(--tag-local-bg);color:var(--tag-local)}
+.tag-urgent{background:var(--tag-urgent-bg);color:var(--tag-urgent)}
+.time{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.card-title{font-size:17px;font-weight:600;color:var(--fg);line-height:1.45;flex:1}
+.card-summary{font-size:13px;color:var(--muted);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:8px;border-top:1px dashed var(--border);margin-top:auto}
+.src{font-size:12px;color:var(--muted);font-weight:500}
+.arrow{font-size:13px;color:var(--accent);font-weight:600}
+.empty{text-align:center;padding:80px 24px;color:var(--muted)}
+.empty .icon{font-size:48px;margin-bottom:12px;opacity:.6}
+.empty .hint{font-size:14px;margin-top:8px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.7}
+footer{text-align:center;margin-top:80px;padding-top:32px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+footer p{margin-bottom:4px}
+@media (max-width:600px){
+  .container{padding:40px 20px 64px}
+  .hero h1{font-size:26px}
+  .hero-logo{font-size:44px}
+  .grid{grid-template-columns:1fr}
+  .meta-bar{flex-direction:column;align-items:flex-start}
+  .theme-toggle{top:12px;right:12px;width:36px;height:36px;font-size:16px}
+}
+</style>
+</head>
+<body>
+<button class="theme-toggle" type="button" aria-label="切換深淺色模式" title="切換深淺色模式"><span id="themeIcon">🌙</span></button>
+<main class="container">
+  <header class="hero">
+    <div class="hero-logo">📰</div>
+    <h1>香港在地情報站</h1>
+    <p class="subtitle">馬灣 · 天水圍 · 港燈 · 交通中斷 · 本地突發新聞 · 每小時自動更新</p>
+  </header>
+
+  <div class="meta-bar">
+    <div class="meta-info">
+      上次更新：<strong id="updatedAt">載入中…</strong> · 共有 <strong id="itemCount">0</strong> 條情報
+    </div>
+    <div class="meta-actions">
+      <button class="btn ghost" id="refreshBtn" type="button">🔄 重新載入</button>
+      <a class="btn" href="./news-data.json" target="_blank" rel="noopener">📄 原始 JSON</a>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="legend-item"><span class="legend-dot dot-traffic"></span>交通</span>
+    <span class="legend-item"><span class="legend-dot dot-power"></span>電力</span>
+    <span class="legend-item"><span class="legend-dot dot-local"></span>在地</span>
+    <span class="legend-item"><span class="legend-dot dot-urgent"></span>突發</span>
+  </div>
+
+  <div id="newsGrid" class="grid">
+    <div class="empty"><div class="icon">⏳</div><div>載入情報中…</div></div>
+  </div>
+
+  <footer>
+    <p>© 2026 Terry · 香港在地情報站</p>
+    <p>每小時自動更新 · 來源：RTHK 即時新聞、政府公告 · 篩選自「馬灣 / 天水圍 / 港燈 / 交通 / 電力」關鍵字</p>
+    <p><a href="./index.html">← 返回主頁</a> · <a href="./tv.html">📺 電視台</a></p>
+  </footer>
+</main>
+<script>
+(function(){
+  var TKEY="theme";
+  var root=document.documentElement;
+  function applyTheme(t){
+    root.setAttribute("data-theme", t);
+    var icon=document.getElementById("themeIcon");
+    if(icon) icon.textContent = t==="dark" ? "☀️" : "🌙";
+    try{localStorage.setItem(TKEY,t);}catch(e){}
+  }
+  var saved;
+  try{saved=localStorage.getItem(TKEY);}catch(e){}
+  if(saved!=="dark" && saved!=="light"){
+    saved = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  applyTheme(saved);
+  var tBtn=document.querySelector(".theme-toggle");
+  if(tBtn) tBtn.addEventListener("click", function(){
+    applyTheme(root.getAttribute("data-theme")==="dark" ? "light" : "dark");
+  });
+
+  var refreshBtn=document.getElementById("refreshBtn");
+  if(refreshBtn) refreshBtn.addEventListener("click", function(){
+    refreshBtn.disabled=true;
+    refreshBtn.textContent="⏳ 載入中…";
+    loadNews(true);
+  });
+
+  function tagOf(title, summary){
+    var text=((title||"")+" "+(summary||"")).toLowerCase();
+    if(/突發|緊急|疏散|封路|中斷|停運|停擺|故障|火警|水浸|山泥|塌樹/.test(text)) return "urgent";
+    if(/交通|巴士|地鐵|港鐵|隧道|幹線|公路|橋樑|封閉|改道|擠塞/.test(text)) return "traffic";
+    if(/港燈|hk electric|中華電力|中電|供電|停電|電力/.test(text)) return "power";
+    if(/馬灣|天水圍|元朗|屯門|荃灣|葵青|離島/.test(text)) return "local";
+    return "local";
+  }
+  function tagLabel(t){ return {traffic:"交通", power:"電力", local:"在地", urgent:"突發"}[t] || "在地"; }
+
+  function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  function fmtTime(iso){
+    if(!iso) return "";
+    try{
+      var d=new Date(iso);
+      var diff=Math.floor((Date.now()-d.getTime())/1000);
+      if(diff<60) return diff+" 秒前";
+      if(diff<3600) return Math.floor(diff/60)+" 分鐘前";
+      if(diff<86400) return Math.floor(diff/3600)+" 小時前";
+      if(diff<604800) return Math.floor(diff/86400)+" 天前";
+      var mo=String(d.getMonth()+1).padStart(2,"0");
+      var da=String(d.getDate()).padStart(2,"0");
+      var hh=String(d.getHours()).padStart(2,"0");
+      var mm=String(d.getMinutes()).padStart(2,"0");
+      return mo+"-"+da+" "+hh+":"+mm;
+    }catch(e){ return ""; }
+  }
+  function fmtHkt(iso){
+    if(!iso) return "—";
+    try{
+      var d=new Date(iso);
+      var y=d.getUTCFullYear();
+      var mo=String(d.getUTCMonth()+1).padStart(2,"0");
+      var da=String(d.getUTCDate()).padStart(2,"0");
+      var hh=(d.getUTCHours()+8)%24;
+      var mm=String(d.getUTCMinutes()).padStart(2,"0");
+      if(d.getUTCHours()+8>=24){ var nd=new Date(d.getTime()); nd.setUTCDate(nd.getUTCDate()+1); y=nd.getUTCFullYear(); mo=String(nd.getUTCMonth()+1).padStart(2,"0"); da=String(nd.getUTCDate()).padStart(2,"0"); }
+      return y+"-"+mo+"-"+da+" "+String(hh).padStart(2,"0")+":"+mm+" HKT";
+    }catch(e){ return iso; }
+  }
+
+  function render(items){
+    var grid=document.getElementById("newsGrid");
+    if(!items || !items.length){
+      grid.innerHTML =
+        '<div class="empty">'+
+          '<div class="icon">📭</div>'+
+          '<div>暫無符合條件嘅在地情報</div>'+
+          '<div class="hint">篩選條件：標題或摘要包含「馬灣 / 天水圍 / 港燈 / HK Electric / 交通中斷 / 電力故障 / 突發 / 緊急」等關鍵字。如果成日空白，可能冇相關新聞或係新聞源出咗問題。</div>'+
+        '</div>';
+      return;
+    }
+    var html="";
+    items.forEach(function(it){
+      var t=tagOf(it.title, it.summary);
+      var time=fmtTime(it.published) || it.published_hkt || "";
+      var src=(it.source||"來源").replace(/^https?:\/\/(www\.)?/,"").split("/")[0];
+      html+='<a class="card" href="'+esc(it.link)+'" target="_blank" rel="noopener">';
+      html+='<div class="card-head">';
+      html+='<span class="tag tag-'+t+'">'+esc(tagLabel(t))+'</span>';
+      if(time) html+='<span class="time">'+esc(time)+'</span>';
+      html+='</div>';
+      html+='<div class="card-title">'+esc(it.title)+'</div>';
+      if(it.summary) html+='<div class="card-summary">'+esc(it.summary)+'</div>';
+      html+='<div class="card-foot"><span class="src">'+esc(src)+'</span><span class="arrow">閱讀全文 →</span></div>';
+      html+='</a>';
+    });
+    grid.innerHTML=html;
+  }
+
+  function loadNews(manual){
+    var grid=document.getElementById("newsGrid");
+    grid.innerHTML='<div class="empty"><div class="icon">⏳</div><div>'+(manual?"重新載入中…":"載入情報中…")+'</div></div>';
+    fetch("./news-data.json?_="+Date.now(), {cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+      .then(function(data){
+        document.getElementById("updatedAt").textContent = fmtHkt(data.updated_utc) || data.updated_hkt || "—";
+        document.getElementById("itemCount").textContent = (data.items||[]).length;
+        render(data.items||[]);
+        if(refreshBtn){ refreshBtn.disabled=false; refreshBtn.textContent="🔄 重新載入"; }
+      })
+      .catch(function(err){
+        grid.innerHTML =
+          '<div class="empty">'+
+            '<div class="icon">⚠️</div>'+
+            '<div>載入失敗：'+esc(err.message)+'</div>'+
+            '<div class="hint">可能 GitHub Actions 未跑過第一次，或者網絡問題。等 10 分鐘再試或去 GitHub Actions 頁面手動觸發。</div>'+
+          '</div>';
+        if(refreshBtn){ refreshBtn.disabled=false; refreshBtn.textContent="🔄 重新載入"; }
+      });
+  }
+  loadNews(false);
+})();
+</script>
+</body>
+</html>

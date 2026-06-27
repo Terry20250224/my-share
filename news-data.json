@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "updated_utc": "2026-06-27T05:40:22.450781+00:00",
+  "updated_hkt": "2026-06-27 13:40 HKT",
+  "source": "RTHK + DATA.GOV.HK + HKO",
+  "count": 2,
+  "items": [
+    {
+      "title": "預料強陣風吹襲香港東部水域及港島九龍 天文台提醒市民躲避",
+      "summary": "天文台預料強陣風吹襲大嶼山、香港東部水域、香港島及九龍，提醒市民如果身處室外，要盡快到安全地方躲避。 編輯：盧曉珊",
+      "link": "https://news.rthk.hk/rthk/ch/component/k2/1860125-20260627.htm",
+      "published": "Sat, 27 Jun 2026 06:44:45 +0800",
+      "source": "RTHK 即時新聞・本地",
+      "tag": "local"
+    },
+    {
+      "title": "天文台預料強陣風吹襲大嶼山、香港島及九龍",
+      "summary": "天文台發出特別天氣提示，指預料強陣風吹襲大嶼山、香港島及九龍，呼籲市民如果身處室外，要盡快到安全地方躲避。 編輯：盧曉珊",
+      "link": "https://news.rthk.hk/rthk/ch/component/k2/1860124-20260627.htm",
+      "published": "Sat, 27 Jun 2026 06:23:44 +0800",
+      "source": "RTHK 即時新聞・本地",
+      "tag": "local"
+    }
+  ]
+}
