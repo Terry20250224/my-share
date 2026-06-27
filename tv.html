@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>私房流動電視台 · Terry</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@8.10.0/dist/video-js.min.css" />
 <style>
 :root{
   --bg:#fafaf7;
@@ -13,18 +14,21 @@
   --border:#e8e6df;
   --accent:#8b7355;
   --accent-soft:#f4efe8;
+  --player-bg:#000;
   --shadow:0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
 }
 :root[data-theme=light]{
   --bg:#fafaf7; --fg:#1f2024; --muted:#6b6f76;
   --card:#ffffff; --border:#e8e6df;
   --accent:#8b7355; --accent-soft:#f4efe8;
+  --player-bg:#000;
   --shadow:0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
 }
 :root[data-theme=dark]{
   --bg:#16161a; --fg:#ececec; --muted:#9a9a9f;
   --card:#1f1f24; --border:#2a2a30;
   --accent:#d4b896; --accent-soft:#2a241c;
+  --player-bg:#000;
   --shadow:0 1px 3px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
 }
 .theme-toggle{position:fixed;top:20px;right:20px;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--fg);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s,background .2s;z-index:100;font-family:inherit}
@@ -34,41 +38,63 @@
 html,body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
 a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
 a:hover{border-bottom-color:var(--accent)}
-.container{max-width:780px;margin:0 auto;padding:64px 24px 96px}
-.remote-hero{text-align:center;margin-bottom:48px;padding:32px 24px;background:linear-gradient(135deg,var(--accent-soft),transparent);border-radius:16px;border:1px solid var(--border)}
-.remote-logo{font-size:56px;margin-bottom:12px}
-.remote-hero h1{font-size:34px;font-weight:600;letter-spacing:.5px;margin-bottom:8px}
-.remote-hero .subtitle{color:var(--muted);font-size:15px;max-width:520px;margin:0 auto}
-.subscribe-box{background:var(--card);border:2px solid var(--accent);border-radius:16px;padding:24px;box-shadow:var(--shadow);margin-bottom:56px}
-.subscribe-box .section-title{margin-top:0;border-bottom-color:var(--accent);color:var(--accent)}
-.subscribe-url{display:flex;align-items:center;gap:10px;background:var(--accent-soft);border-radius:10px;padding:14px 16px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:var(--accent);overflow-x:auto;white-space:nowrap;border:1px dashed var(--accent)}
+.container{max-width:960px;margin:0 auto;padding:64px 24px 96px}
+.remote-hero{text-align:center;margin-bottom:32px;padding:28px 24px;background:linear-gradient(135deg,var(--accent-soft),transparent);border-radius:16px;border:1px solid var(--border)}
+.remote-logo{font-size:48px;margin-bottom:10px}
+.remote-hero h1{font-size:30px;font-weight:600;letter-spacing:.5px;margin-bottom:6px}
+.remote-hero .subtitle{color:var(--muted);font-size:14px;max-width:520px;margin:0 auto}
+
+/* Player section */
+.player-section{margin-bottom:40px}
+.player-wrap{position:relative;background:var(--player-bg);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);aspect-ratio:16/9}
+.player-wrap .video-js{width:100%;height:100%;background:#000}
+.player-wrap .vjs-big-play-button{background-color:rgba(139,115,85,.85)!important;border-color:#fff!important;border-radius:50%!important;width:80px!important;height:80px!important;line-height:80px!important;font-size:40px!important}
+.player-wrap .vjs-big-play-button:hover{background-color:var(--accent)!important}
+.player-status{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--muted)}
+.player-status .now{color:var(--fg);font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.player-status .now strong{color:var(--accent)}
+.player-status .pip{font-size:12px;color:var(--accent);background:var(--accent-soft);padding:4px 10px;border-radius:6px;border:none;cursor:pointer;font-family:inherit;transition:background .2s}
+.player-status .pip:hover{background:var(--accent);color:#fff}
+
+/* Subscribe box */
+.subscribe-box{background:var(--card);border:2px solid var(--accent);border-radius:16px;padding:22px;box-shadow:var(--shadow);margin-bottom:48px}
+.subscribe-box .section-title{margin-top:0;border-bottom-color:var(--accent);color:var(--accent);font-size:13px}
+.subscribe-url{display:flex;align-items:center;gap:10px;background:var(--accent-soft);border-radius:10px;padding:12px 14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--accent);overflow-x:auto;white-space:nowrap;border:1px dashed var(--accent)}
 .subscribe-url span{flex:1;min-width:0}
-.copy-btn{flex-shrink:0;background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;transition:transform .15s;font-family:inherit}
+.copy-btn{flex-shrink:0;background:var(--accent);color:#fff;border:none;padding:7px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;transition:transform .15s;font-family:inherit}
 .copy-btn:hover{transform:scale(1.04)}
 .copy-btn.copied{background:#22c55e}
-.subscribe-hint{margin-top:12px;font-size:13px;color:var(--muted)}
-.section{margin-bottom:56px}
-.section-title{font-size:14px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.channel-group{margin-bottom:32px}
-.group-title{font-size:15px;font-weight:600;color:var(--fg);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.subscribe-hint{margin-top:10px;font-size:12px;color:var(--muted)}
+
+.section{margin-bottom:48px}
+.section-title{font-size:13px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:18px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.channel-group{margin-bottom:28px}
+.group-title{font-size:14px;font-weight:600;color:var(--fg);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .group-count{font-size:12px;color:var(--muted);font-weight:400}
-.channel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-.channel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform .15s,border-color .15s;border-bottom:1px solid var(--border)}
+.channel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.channel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .15s,border-color .15s,background .15s;border-bottom:1px solid var(--border)}
 .channel:hover{transform:translateY(-2px);border-color:var(--accent)}
-.channel-icon{width:42px;height:42px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.channel.active{border-color:var(--accent);background:var(--accent-soft)}
+.channel-icon{width:38px;height:38px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.channel.active .channel-icon{background:var(--accent);color:#fff}
 .channel-body{flex:1;min-width:0}
-.channel-name{font-weight:500;font-size:15px;margin-bottom:2px;color:var(--fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.channel-meta{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.channel-action{flex-shrink:0;font-size:12px;color:var(--accent);font-weight:500;padding:6px 10px;border:1px solid var(--accent);border-radius:6px;transition:background .2s}
+.channel-name{font-weight:500;font-size:14px;margin-bottom:2px;color:var(--fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.channel-meta{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.channel-action{flex-shrink:0;font-size:12px;color:var(--accent);font-weight:500;padding:5px 9px;border:1px solid var(--accent);border-radius:6px;transition:background .2s}
+.channel.active .channel-action{background:var(--accent);color:#fff}
 .channel:hover .channel-action{background:var(--accent-soft)}
-footer{text-align:center;margin-top:80px;padding-top:32px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+.channel.active:hover .channel-action{background:var(--accent)}
+
+footer{text-align:center;margin-top:64px;padding-top:28px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
 footer p{margin-bottom:4px}
+
 @media (max-width:600px){
-  .container{padding:40px 20px 64px}
-  .remote-hero h1{font-size:26px}
-  .remote-logo{font-size:44px}
+  .container{padding:40px 16px 64px}
+  .remote-hero h1{font-size:24px}
+  .remote-logo{font-size:38px}
   .channel-grid{grid-template-columns:1fr}
   .theme-toggle{top:12px;right:12px;width:36px;height:36px;font-size:16px}
+  .player-status{flex-wrap:wrap}
 }
 </style>
 </head>
@@ -80,8 +106,18 @@ footer p{margin-bottom:4px}
   <header class="remote-hero">
     <div class="remote-logo">📺</div>
     <h1>私房流動電視台</h1>
-    <p class="subtitle">每日自動更新嘅極速 IPTV 頻道源 · 專屬 TiviMate 訂閱</p>
+    <p class="subtitle">每日自動更新嘅極速 IPTV 頻道源 · 網頁即點即播 + TiviMate 訂閱</p>
   </header>
+
+  <section class="player-section">
+    <div class="player-wrap">
+      <video id="tvPlayer" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="none" playsinline></video>
+    </div>
+    <div class="player-status">
+      <div class="now">目前頻道：<strong id="nowChannel">尚未選台</strong></div>
+      <button class="pip" id="pipBtn" type="button" hidden>📺 子母畫面</button>
+    </div>
+  </section>
 
   <section class="subscribe-box">
     <h2 class="section-title">📡 TiviMate 訂閱連結</h2>
@@ -93,42 +129,55 @@ footer p{margin-bottom:4px}
   </section>
 
   <section class="section">
-    <h2 class="section-title">📺 頻道列表</h2>
+    <h2 class="section-title">📺 頻道列表 · 點擊即播</h2>
     <div id="channelList">載入中...</div>
   </section>
 
   <footer>
     <p>© 2026 Terry · 私房流動電視台</p>
     <p>每日 00:00 HKT 自動更新 · 數據源:iptv-org + gaotianliuyun(免費 GitHub 公開源)</p>
+    <p>播放器:Video.js (MIT,免費 CDN) · 絕對零成本部署</p>
     <p><a href="./index.html">← 返回主頁</a></p>
   </footer>
 </main>
+
+<script src="https://cdn.jsdelivr.net/npm/video.js@8.10.0/dist/video.min.js"></script>
 <script>
 (function(){
-  var KEY="theme";
+  var THEME_KEY="theme";
   var root=document.documentElement;
-  function apply(theme){
+  function applyTheme(theme){
     root.setAttribute("data-theme", theme);
     var icon=document.getElementById("themeIcon");
     if(icon) icon.textContent = theme==="dark" ? "☀️" : "🌙";
-    try{localStorage.setItem(KEY,theme);}catch(e){}
+    try{localStorage.setItem(THEME_KEY,theme);}catch(e){}
   }
   var saved;
-  try{saved=localStorage.getItem(KEY);}catch(e){}
+  try{saved=localStorage.getItem(THEME_KEY);}catch(e){}
   if(saved!=="dark" && saved!=="light"){
     saved = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   }
-  apply(saved);
+  applyTheme(saved);
+
+  // Sync theme across tabs
+  window.addEventListener("storage", function(e){
+    if(e.key===THEME_KEY && (e.newValue==="dark" || e.newValue==="light")){
+      applyTheme(e.newValue);
+    }
+  });
+
   if(document.readyState==="loading"){
-    document.addEventListener("DOMContentLoaded", bindAll);
+    document.addEventListener("DOMContentLoaded", init);
   } else {
-    setTimeout(bindAll, 0);
+    init();
   }
-  function bindAll(){
+
+  function init(){
     var btn=document.querySelector(".theme-toggle");
     if(btn) btn.addEventListener("click", function(){
-      apply(root.getAttribute("data-theme")==="dark" ? "light" : "dark");
+      applyTheme(root.getAttribute("data-theme")==="dark" ? "light" : "dark");
     });
+
     var copyBtn=document.getElementById("copyBtn");
     var subUrl=document.getElementById("subUrl");
     if(copyBtn && subUrl){
@@ -158,8 +207,82 @@ footer p{margin-bottom:4px}
         }
       });
     }
+
+    initPlayer();
     loadChannels();
   }
+
+  var player = null;
+  var currentUrl = "";
+
+  function initPlayer(){
+    var videoEl = document.getElementById("tvPlayer");
+    if(!videoEl || !window.videojs) return;
+    player = videojs(videoEl, {
+      controls: true,
+      autoplay: false,
+      preload: "none",
+      fluid: false,
+      responsive: true,
+      fill: true,
+      playsinline: true,
+      html5: {
+        vhs: { overrideNative: false },
+        nativeAudioTracks: false,
+        nativeVideoTracks: false
+      }
+    });
+    player.on("error", function(){
+      var nowEl = document.getElementById("nowChannel");
+      if(nowEl) nowEl.textContent = "⚠️ 載入失敗（可能係來源失效或網絡問題）";
+    });
+    player.on("playing", function(){
+      var pipBtn = document.getElementById("pipBtn");
+      if(pipBtn) pipBtn.hidden = false;
+    });
+
+    var pipBtn = document.getElementById("pipBtn");
+    if(pipBtn){
+      pipBtn.addEventListener("click", async function(){
+        if(!player) return;
+        try{
+          var v = player.tech_.el();
+          if(document.pictureInPictureElement){
+            await document.exitPictureInPicture();
+          } else if(v && v.requestPictureInPicture){
+            await v.requestPictureInPicture();
+          }
+        }catch(e){
+          console.log("PiP not supported:", e);
+        }
+      });
+    }
+  }
+
+  function playChannel(url, name){
+    if(!player || !url) return;
+    var nowEl = document.getElementById("nowChannel");
+    if(nowEl) nowEl.textContent = name || "載入中...";
+
+    // HLS detection → use video.js native HLS for Safari, native src for others
+    var isHls = /\.m3u8(\?|$)/i.test(url);
+    if(isHls && player.tech_.supportsNativeHls){
+      player.src({ src: url, type: "application/x-mpegURL" });
+    } else if(isHls && window.Hls && window.Hls.isSupported()){
+      // video.js 8 includes Hls.js by default; this branch rarely hit
+      player.src({ src: url, type: "application/x-mpegURL" });
+    } else {
+      player.src({ src: url });
+    }
+    currentUrl = url;
+    var playPromise = player.play();
+    if(playPromise && playPromise.catch){
+      playPromise.catch(function(){
+        if(nowEl) nowEl.textContent = "▶ 請按播放鍵開始";
+      });
+    }
+  }
+
   function loadChannels(){
     var list=document.getElementById("channelList");
     if(!list) return;
@@ -167,8 +290,7 @@ footer p{margin-bottom:4px}
       .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.text(); })
       .then(function(text){
         var groups={};
-        var lines=text.split(/?
-/);
+        var lines=text.split(/\r?\n/);
         for(var i=0;i<lines.length;i++){
           var line=lines[i];
           if(line.indexOf("#EXTINF")!==0) continue;
@@ -191,6 +313,7 @@ footer p{margin-bottom:4px}
         list.innerHTML="<p style='color:var(--muted)'>暫時未抓到頻道。請稍後再試,或查看 GitHub Actions 日誌。</p><p style='color:var(--muted);font-size:12px;margin-top:8px'>錯誤:"+err.message+"</p>";
       });
   }
+
   function render(list, groups){
     var order=["ViuTV","港台電視","CCTV-5 系列","廣東體育","芒果 / 湖南衛視"];
     var orderedKeys=Object.keys(groups).sort(function(a,b){
@@ -223,32 +346,24 @@ footer p{margin-bottom:4px}
     list.innerHTML=html;
     bindChannelClicks();
   }
+
   function bindChannelClicks(){
     document.querySelectorAll(".channel").forEach(function(el){
       el.addEventListener("click", function(){
         var url=el.getAttribute("data-url");
         var name=el.getAttribute("data-name");
-        if(navigator.clipboard && navigator.clipboard.writeText){
-          navigator.clipboard.writeText(url).then(function(){
-            flash(el, "已複製 ✓");
-          }, function(){ openPlayer(url); });
-        } else {
-          openPlayer(url);
-        }
-        function openPlayer(u){
-          var w=window.open();
-          if(w){ w.document.write("<title>"+esc(name)+"</title><video src='"+esc(u)+"' controls autoplay style='width:100%;height:100vh;background:#000'></video>"); }
+        document.querySelectorAll(".channel.active").forEach(function(a){ a.classList.remove("active"); });
+        el.classList.add("active");
+        playChannel(url, name);
+        // Scroll player into view on mobile
+        if(window.innerWidth < 700){
+          var wrap = document.querySelector(".player-wrap");
+          if(wrap && wrap.scrollIntoView) wrap.scrollIntoView({behavior:"smooth", block:"start"});
         }
       });
     });
   }
-  function flash(el, msg){
-    var act=el.querySelector(".channel-action");
-    if(!act) return;
-    var orig=act.textContent;
-    act.textContent=msg;
-    setTimeout(function(){ act.textContent=orig; }, 1400);
-  }
+
   function esc(s){
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   }
