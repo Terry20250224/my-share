@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>🎵 私房影音儲藏室 · Terry</title>
+<style>
+:root{
+  --bg:#fafaf7;
+  --fg:#1f2024;
+  --muted:#6b6f76;
+  --card:#ffffff;
+  --border:#e8e6df;
+  --accent:#8b7355;
+  --accent-soft:#f4efe8;
+  --shadow:0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
+}
+:root[data-theme=light]{
+  --bg:#fafaf7; --fg:#1f2024; --muted:#6b6f76;
+  --card:#ffffff; --border:#e8e6df;
+  --accent:#8b7355; --accent-soft:#f4efe8;
+  --shadow:0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
+}
+:root[data-theme=dark]{
+  --bg:#16161a; --fg:#ececec; --muted:#9a9a9f;
+  --card:#1f1f24; --border:#2a2a30;
+  --accent:#d4b896; --accent-soft:#2a241c;
+  --shadow:0 1px 3px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+}
+.theme-toggle{position:fixed;top:20px;right:20px;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--fg);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s,background .2s;z-index:100;font-family:inherit}
+.theme-toggle:hover{transform:scale(1.05)}
+.theme-toggle:focus{outline:none;box-shadow:var(--shadow),0 0 0 3px var(--accent-soft)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+a:hover{border-bottom-color:var(--accent)}
+.container{max-width:1100px;margin:0 auto;padding:56px 24px 80px}
+.hero{text-align:center;margin-bottom:36px}
+.hero-logo{font-size:52px;margin-bottom:10px}
+.hero h1{font-size:32px;font-weight:600;letter-spacing:.5px;margin-bottom:8px}
+.hero .subtitle{color:var(--muted);font-size:15px;max-width:560px;margin:0 auto}
+
+/* Player */
+.player-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:24px}
+.player-meta{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px}
+.player-tag{background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:500;padding:4px 10px;border-radius:999px;flex-shrink:0}
+.player-title{flex:1;min-width:0}
+.player-title h2{font-size:18px;font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-title p{font-size:13px;color:var(--muted)}
+.player video{width:100%;height:auto;display:block;background:#000;max-height:480px}
+
+/* Layout */
+.workspace{display:grid;grid-template-columns:340px 1fr;gap:20px;margin-bottom:40px}
+@media (max-width:860px){
+  .workspace{grid-template-columns:1fr}
+}
+
+/* Sidebar (track list) */
+.sidebar{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;min-height:0}
+.sidebar-title{font-size:14px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.filter{background:var(--bg);border:1px solid var(--border);color:var(--fg);padding:6px 12px;border-radius:999px;font-size:12px;cursor:pointer;transition:all .15s;font-family:inherit}
+.filter:hover{border-color:var(--accent);color:var(--accent)}
+.filter.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.track-list{list-style:none;display:flex;flex-direction:column;gap:8px;max-height:560px;overflow-y:auto;padding-right:4px}
+.track-list::-webkit-scrollbar{width:6px}
+.track-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.track{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .15s;border-bottom:1px solid var(--border)}
+.track:hover{border-color:var(--accent);transform:translateX(2px)}
+.track.active{border-color:var(--accent);background:var(--accent-soft)}
+.track-name{font-weight:500;font-size:14px;margin-bottom:2px;color:var(--fg)}
+.track-meta{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.track-tag{background:var(--accent-soft);color:var(--accent);font-size:10px;padding:2px 6px;border-radius:4px}
+
+/* Lyrics / review pane */
+.lyrics-pane{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:28px 32px;min-height:480px;display:flex;flex-direction:column}
+.lyrics-header{margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.lyrics-title{font-size:22px;font-weight:600;margin-bottom:6px}
+.lyrics-artist{font-size:14px;color:var(--muted)}
+.lyrics-body{flex:1;white-space:pre-wrap;font-size:17px;line-height:1.95;color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif}
+.lyrics-body .review-label{color:var(--accent);font-weight:500;margin-top:18px;display:inline-block}
+.lyrics-empty{color:var(--muted);font-style:italic;text-align:center;padding:80px 0}
+footer{text-align:center;margin-top:40px;padding-top:24px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+footer p{margin-bottom:4px}
+@media (max-width:600px){
+  .container{padding:36px 16px 56px}
+  .hero h1{font-size:24px}
+  .hero-logo{font-size:42px}
+  .lyrics-pane{padding:20px}
+  .lyrics-body{font-size:16px}
+  .theme-toggle{top:12px;right:12px;width:36px;height:36px;font-size:16px}
+}
+</style>
+</head>
+<body>
+<button class="theme-toggle" type="button" aria-label="切換深淺色模式" title="切換深淺色模式">
+  <span id="themeIcon">🌙</span>
+</button>
+<main class="container">
+  <header class="hero">
+    <div class="hero-logo">🎵</div>
+    <h1>私房影音儲藏室</h1>
+    <p class="subtitle">收藏 90 年代金曲同內地綜藝舞台 · 配樂評同歌詞細味</p>
+  </header>
+
+  <section class="player-wrap">
+    <div class="player-meta">
+      <span class="player-tag" id="playerTag">載入中</span>
+      <div class="player-title">
+        <h2 id="playerTitle">揀首歌開始播放</h2>
+        <p id="playerArtist">← 點左邊清單</p>
+      </div>
+    </div>
+    <div class="player">
+      <video id="player" controls preload="metadata" playsinline></video>
+    </div>
+  </section>
+
+  <section class="workspace">
+    <aside class="sidebar">
+      <div class="sidebar-title">🎼 歌單</div>
+      <div class="filters" id="filters">
+        <button class="filter active" data-cat="all">全部</button>
+        <button class="filter" data-cat="90s金曲">90s 金曲</button>
+        <button class="filter" data-cat="內地綜藝">內地綜藝</button>
+      </div>
+      <ul class="track-list" id="trackList">
+        <li style="color:var(--muted);font-size:13px;text-align:center;padding:20px 0">載入中...</li>
+      </ul>
+    </aside>
+
+    <section class="lyrics-pane">
+      <div class="lyrics-header">
+        <div class="lyrics-title" id="lyricsTitle">歡迎來到儲藏室</div>
+        <div class="lyrics-artist" id="lyricsArtist">揀首歌睇歌詞同我嘅樂評</div>
+      </div>
+      <div class="lyrics-body" id="lyricsBody">
+        <p class="lyrics-empty">點擊左邊清單開始 →</p>
+      </div>
+    </section>
+  </section>
+
+  <footer>
+    <p>© 2026 Terry · 私房影音儲藏室</p>
+    <p>資料儲存於 <code>music-data.json</code> · 純前端 GitHub Pages</p>
+    <p><a href="./index.html">← 返回主頁</a> · <a href="./tv.html">📺 電視台</a></p>
+  </footer>
+</main>
+<script>
+(function(){
+  // ============ Theme ============
+  var TKEY="theme";
+  var root=document.documentElement;
+  function applyTheme(t){
+    root.setAttribute("data-theme", t);
+    var icon=document.getElementById("themeIcon");
+    if(icon) icon.textContent = t==="dark" ? "☀️" : "🌙";
+    try{localStorage.setItem(TKEY,t);}catch(e){}
+  }
+  var saved;
+  try{saved=localStorage.getItem(TKEY);}catch(e){}
+  if(saved!=="dark" && saved!=="light"){
+    saved = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  applyTheme(saved);
+  document.addEventListener("DOMContentLoaded", function(){
+    var btn=document.querySelector(".theme-toggle");
+    if(btn) btn.addEventListener("click", function(){
+      applyTheme(root.getAttribute("data-theme")==="dark" ? "light" : "dark");
+    });
+    loadData();
+  });
+
+  // ============ Data + UI ============
+  var tracks = [];
+  var currentCat = "all";
+  var currentTrack = null;
+
+  function loadData(){
+    fetch("./music-data.json", {cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+      .then(function(data){
+        tracks = (data && data.tracks) || [];
+        renderFilters();
+        renderList();
+        if (tracks.length) selectTrack(tracks[0].id, false);
+      })
+      .catch(function(err){
+        document.getElementById("trackList").innerHTML =
+          "<li style='color:var(--muted);font-size:13px;padding:12px'>載入失敗:"+esc(err.message)+"</li>";
+      });
+  }
+
+  function renderFilters(){
+    var cats = ["all"];
+    tracks.forEach(function(t){ if (cats.indexOf(t.type)===-1) cats.push(t.type); });
+    // we already have 90s金曲 / 內地綜藝 hardcoded; rebuild dynamically if more appear
+    var box = document.getElementById("filters");
+    box.innerHTML = "";
+    cats.forEach(function(c){
+      var b = document.createElement("button");
+      b.className = "filter" + (c===currentCat ? " active" : "");
+      b.setAttribute("data-cat", c);
+      b.textContent = c === "all" ? "全部" : c;
+      b.addEventListener("click", function(){ setCat(c); });
+      box.appendChild(b);
+    });
+  }
+
+  function setCat(cat){
+    currentCat = cat;
+    document.querySelectorAll(".filter").forEach(function(el){
+      el.classList.toggle("active", el.getAttribute("data-cat") === cat);
+    });
+    renderList();
+  }
+
+  function renderList(){
+    var list = document.getElementById("trackList");
+    var filtered = currentCat === "all" ? tracks : tracks.filter(function(t){ return t.type === currentCat; });
+    if (!filtered.length){
+      list.innerHTML = "<li style='color:var(--muted);font-size:13px;text-align:center;padding:20px 0'>呢個分類暫時未有歌</li>";
+      return;
+    }
+    list.innerHTML = "";
+    filtered.forEach(function(t){
+      var li = document.createElement("li");
+      li.className = "track" + (currentTrack && currentTrack.id === t.id ? " active" : "");
+      li.setAttribute("data-id", t.id);
+      li.innerHTML =
+        '<div class="track-name">'+esc(t.title)+'</div>'+
+        '<div class="track-meta">'+
+          '<span>'+esc(t.singer)+'</span>'+
+          '<span>·</span>'+
+          '<span class="track-tag">'+esc(t.type)+'</span>'+
+        '</div>';
+      li.addEventListener("click", function(){ selectTrack(t.id, true); });
+      list.appendChild(li);
+    });
+  }
+
+  function selectTrack(id, autoplay){
+    var t = tracks.filter(function(x){ return x.id === id; })[0];
+    if (!t) return;
+    currentTrack = t;
+    // highlight
+    document.querySelectorAll(".track").forEach(function(el){
+      el.classList.toggle("active", el.getAttribute("data-id") === id);
+    });
+    // player meta
+    document.getElementById("playerTag").textContent = t.type;
+    document.getElementById("playerTitle").textContent = t.title;
+    document.getElementById("playerArtist").textContent = (t.singer || "") + (t.year ? " · " + t.year : "");
+    // video
+    var v = document.getElementById("player");
+    v.src = t.videoUrl || "";
+    if (autoplay && v.src) {
+      try { v.play().catch(function(){}); } catch(e){}
+    }
+    // lyrics
+    document.getElementById("lyricsTitle").textContent = t.title;
+    document.getElementById("lyricsArtist").textContent = (t.singer || "") + " · " + (t.type || "");
+    document.getElementById("lyricsBody").innerHTML = formatLyrics(t.lyrics || "");
+  }
+
+  function formatLyrics(raw){
+    if (!raw) return "<p class='lyrics-empty'>呢首歌暫時未有樂評</p>";
+    // split on 【樂評】 / 【舞台筆記】 labels so the review gets a tinted chip
+    var html = esc(raw);
+    html = html.replace(/【(樂評|舞台筆記|歌詞)】/g, function(_, label){
+      return '</p><p class="review-label">【' + label + '】</p><p>';
+    });
+    // wrap entire thing in <p> and split paragraphs on \n\n
+    var parts = html.split(/\n\n+/);
+    return parts.map(function(p){ return "<p>" + p.replace(/\n/g, "<br>") + "</p>"; }).join("");
+  }
+
+  function esc(s){
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+})();
+</script>
+</body>
+</html>
