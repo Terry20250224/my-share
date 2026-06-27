@@ -85,6 +85,14 @@ a:hover{border-bottom-color:var(--accent)}
 .channel:hover .channel-action{background:var(--accent-soft)}
 .channel.active:hover .channel-action{background:var(--accent)}
 
+.backup-box{background:var(--card);border:1px dashed var(--accent);border-radius:12px;padding:16px 18px;margin-bottom:28px;display:flex;align-items:center;gap:16px;box-shadow:var(--shadow);flex-wrap:wrap}
+.backup-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;text-decoration:none;padding:10px 18px;border-radius:10px;font-size:14px;font-weight:500;border:1px solid var(--accent);transition:transform .15s,background .2s;flex-shrink:0}
+.backup-btn:hover{transform:translateY(-1px);background:#755c43;border-bottom-color:#755c43}
+.backup-btn:focus{outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.backup-hint{flex:1;min-width:200px;font-size:12.5px;color:var(--muted);line-height:1.6}
+.backup-hint strong{color:var(--accent);font-weight:600}
+@media (max-width:600px){.backup-box{flex-direction:column;align-items:flex-start}.backup-btn{width:100%;justify-content:center}}
+
 footer{text-align:center;margin-top:64px;padding-top:28px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
 footer p{margin-bottom:4px}
 
@@ -126,6 +134,11 @@ footer p{margin-bottom:4px}
       <button class="copy-btn" id="copyBtn" type="button">複製</button>
     </div>
     <p class="subscribe-hint">複製後貼入 TiviMate → 設定 → 播放列表 → 加入 URL → 即時訂閱</p>
+  </section>
+
+  <section class="backup-box">
+    <a class="backup-btn" href="https://fenglin.tv" target="_blank" rel="noopener noreferrer">🌐 楓林電視 / 台灣電視直播</a>
+    <div class="backup-hint"><strong>外部備援站：</strong>若本站頻道載入失敗，請點此使用外部備援站。</div>
   </section>
 
   <section class="section">
