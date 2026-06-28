@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terry's Hub</title>
+  <style>
+    /* =========================================================
+       暖米白底色 + 棕色/深灰 主題
+       支援深色模式（跟隨系統）
+       ========================================================= */
+    :root {
+      --bg: #f5efe4;            /* 暖米白底 */
+      --fg: #3a2f25;            /* 棕色深灰文字 */
+      --muted: #7a6b5b;         /* 次要文字 */
+      --btn-bg: #ffffff;        /* 按鍵底 */
+      --btn-border: #d9cdba;    /* 按鍵邊框 */
+      --btn-fg: #3a2f25;        /* 按鍵文字 */
+      --btn-hover-bg: #efe6d4;  /* 懸停底 */
+      --btn-hover-border: #b89b6f; /* 懸停邊框 */
+      --shadow: 0 6px 24px rgba(80, 60, 40, 0.08);
+      --shadow-hover: 0 10px 32px rgba(80, 60, 40, 0.14);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1612;            /* 深暖棕底 */
+        --fg: #ece2d2;            /* 暖米白文字 */
+        --muted: #a89886;         /* 次要文字 */
+        --btn-bg: #2a2218;        /* 按鍵底 */
+        --btn-border: #3a3024;    /* 按鍵邊框 */
+        --btn-fg: #ece2d2;        /* 按鍵文字 */
+        --btn-hover-bg: #382c1e;  /* 懸停底 */
+        --btn-hover-border: #b89b6f;
+        --shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+        --shadow-hover: 0 10px 32px rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   "PingFang TC", "Microsoft JhengHei", "Noto Sans TC",
+                   system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* 中央容器 */
+    .hub {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+    }
+
+    /* 招牌 */
+    .brand {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 3rem;
+      color: var(--fg);
+    }
+
+    /* 按鍵群組容器 */
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    /* 寬大圓角按鍵 */
+    .link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      width: 100%;
+      padding: 1.1rem 1.5rem;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--btn-fg);
+      background: var(--btn-bg);
+      border: 1.5px solid var(--btn-border);
+      border-radius: 14px;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+      transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        color 0.25s ease;
+    }
+
+    /* 懸停動畫 */
+    .link-btn:hover {
+      background: var(--btn-hover-bg);
+      border-color: var(--btn-hover-border);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .link-btn:active {
+      transform: translateY(0);
+      box-shadow: var(--shadow);
+    }
+
+    /* 頁尾小字 */
+    .foot {
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main class="hub">
+    <h1 class="brand">Terry's Hub</h1>
+
+    <nav class="links" aria-label="常用連結">
+
+      <!-- =====================================================
+           唯一初始按鍵
+           ===================================================== -->
+      <a class="link-btn"
+         href="https://radio.garden/"
+         target="_blank"
+         rel="noopener noreferrer">
+        🌍 全球收音機
+      </a>
+
+      <!-- =====================================================
+           🚧 這裡可以複製貼上追加新按鍵 🚧
+           複製下面整段 <a>...</a>，改網址同文字即可。
+           範本開始 ↓
+      =====================================================
+      <a class="link-btn"
+         href="https://example.com"
+         target="_blank"
+         rel="noopener noreferrer">
+         🔗 你的連結名稱
+      </a>
+      =====================================================
+           範本結束 ↑
+
+           之後要加第二個、第三個按鍵，
+           只要複製範本再貼喺呢段註解下面就得。
+           ===================================================== -->
+
+    </nav>
+
+    <p class="foot">© Terry's Hub</p>
+  </main>
+</body>
+</html>
