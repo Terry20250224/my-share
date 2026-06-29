@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
+      
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -17,29 +17,11 @@ jobs:
         with:
           gradle-version: 8.1.1
 
-      # 🪄 核心魔法：如果倉庫是空的，叫機器在雲端自動生成完整的 Android 專案結構
-      - name: Generate Android Project Structure
-        run: |
-          mkdir -p app/src/main/res/values
-          
-          # 1. 生成最外層 settings.gradle
-          echo "pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }; dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }; rootProject.name = 'TerryHub'; include ':app'" > settings.gradle
-          
-          # 2. 生成最外層 build.gradle
-          echo "plugins { id 'com.android.application' version '8.1.1' apply false; id 'com.android.library' version '8.1.1' apply false }" > build.gradle
-          
-          # 3. 生成 app 層 build.gradle
-          echo -e "plugins { id 'com.android.application' }\nandroid { namespace 'com.terry.hub'\ncompileSdk 34\ndefaultConfig { applicationId 'com.terry.hub'\nminSdk 26\ntargetSdk 34\nversionCode 1\nversionName '1.0' }\nbuildTypes { release { minifyEnabled false } } }\ndependencies { implementation 'androidx.appcompat:appcompat:1.6.1' }" > app/build.gradle
-          
-          # 4. 生成最基礎的 AndroidManifest.xml 檔
-          echo -e '<?xml version="1.0" encoding="utf-8"?>\n<manifest xmlns:android="http://schemas.android.com/apk/res/android">\n<application android:allowBackup="true" android:label="TerryHub" android:supportsRtl="true" android:theme="@style/Theme.AppCompat.Light">\n<activity android:name=".MainActivity" android:exported="true">\n<intent-filter>\n<action android:name="android.intent.action.MAIN" />\n<category android:name="android.intent.category.LAUNCHER" />\n</intent-filter>\n</activity>\n</application>\n</manifest>' > app/src/main/AndroidManifest.xml
-          
-          # 5. 生成最基礎的字串資源
-          echo -e '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n<string name="app_name">TerryHub</string>\n</resources>' > app/src/main/res/values/strings.xml
-          
-          # 6. 生成 Gradle Wrapper 啟動環境
-          gradle wrapper --gradle-version 8.1.1
-          chmod +x gradlew
+      - name: Generate Gradle Wrapper
+        run: gradle wrapper --gradle-version 8.1.1
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
 
       - name: Build with Gradle
         run: ./gradlew :app:assembleDebug
