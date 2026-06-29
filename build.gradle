@@ -1,0 +1,19 @@
+plugins {
+    id 'com.android.application' version '8.1.1'
+}
+android {
+    namespace 'com.terry.hub'
+    compileSdk 34
+    defaultConfig {
+        applicationId "com.terry.hub"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
