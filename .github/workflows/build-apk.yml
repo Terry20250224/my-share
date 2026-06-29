@@ -1,1 +1,36 @@
 
+name: Build Android APK
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      - name: Create Base Project Structure
+        run: |
+          mkdir -p app/src/main/java/com/terry/hub
+          [ -f build.gradle ] && cp build.gradle app/build.gradle || true
+          [ -f src/main/AndroidManifest.xml ] && cp src/main/AndroidManifest.xml app/src/main/AndroidManifest.xml || true
+          [ -f src/main/java/com/terry/hub/MainActivity.java ] && cp src/main/java/com/terry/hub/MainActivity.java app/src/main/java/com/terry/hub/MainActivity.java || true
+
+      - name: Generate Gradle Wrapper
+        run: gradle wrapper --gradle-version 8.1.1
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew :app:assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: TerryHub-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
