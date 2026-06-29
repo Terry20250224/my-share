@@ -4,23 +4,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'zulu'
 
-      # 🪄 終極魔法：讓官方插件自己下載 Gradle 8.1.1 並直接執行打包，不調用任何系統指令
+      # 🪄 官方免指令打包外掛，同時升級至支援 v4 的最新版本
       - name: Run Gradle Build
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: 8.1.1
           arguments: :app:assembleDebug
 
+      # 🚀 修正核心：全面升級至最新 v4，徹底解決強制棄用的秒退問題！
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: TerryHub-APK
           path: app/build/outputs/apk/debug/app-debug.apk
