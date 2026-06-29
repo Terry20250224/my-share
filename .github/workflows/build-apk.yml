@@ -15,10 +15,17 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: gradle
+    
+    # 🆕 雲端一鍵生成最純淨的 gradlew 檔案，徹底解決 No such file 問題
+    - name: Download Gradle Wrapper
+      run: cd app && gradle wrapper --gradle-version 8.5 && mv gradlew .. && mv gradle ..
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
     - name: Build with Gradle
-      run: gradle assembleDebug
+      run: ./gradlew assembleDebug
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
