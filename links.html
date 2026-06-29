@@ -71,15 +71,24 @@
       color: var(--fg);
     }
 
-    /* 按鍵群組容器：2x2 網格（窄螢幕自動轉直排） */
+    /* 按鍵群組容器：3x3 九宮格（自動流動） */
     .links {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 1rem;
       width: 100%;
-      max-width: 560px;
+      max-width: 720px;
     }
 
+    /* 中等螢幕：2xN */
+    @media (max-width: 720px) {
+      .links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: 520px;
+      }
+    }
+
+    /* 窄螢幕：1xN 直排 */
     @media (max-width: 480px) {
       .links {
         grid-template-columns: 1fr;
@@ -188,6 +197,13 @@
          target="_blank"
          rel="noopener noreferrer">
         📺 全球電視牆
+      </a>
+
+      <a class="link-btn"
+         href="https://atimebook.com/"
+         target="_blank"
+         rel="noopener noreferrer">
+        🕰️ 時光圖書館
       </a>
 
       <!-- =====================================================
