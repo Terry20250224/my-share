@@ -5,26 +5,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'zulu'
 
-      - name: Setup Gradle
+      # 🪄 終極魔法：讓官方插件自己下載 Gradle 8.1.1 並直接執行打包，不調用任何系統指令
+      - name: Run Gradle Build
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: 8.1.1
-
-      - name: Generate Gradle Wrapper
-        run: gradle wrapper --gradle-version 8.1.1
-
-      - name: Make gradlew executable
-        run: chmod +x gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew :app:assembleDebug
+          arguments: :app:assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v3
