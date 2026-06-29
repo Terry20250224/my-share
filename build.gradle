@@ -1,26 +1,5 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id 'com.android.application' version '8.1.1'
-}
-
-android {
-    namespace 'com.terry.hub'
-    compileSdk 34
-
-    defaultConfig {
-        applicationId "com.terry.hub"
-        minSdk 26
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
-    }
-}
-
-dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    id 'com.android.application' version '8.1.1' apply false
+    id 'com.android.library' version '8.1.1' apply false
 }
