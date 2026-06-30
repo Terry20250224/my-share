@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terry's Dynamic Hub</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .nav-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .home-btn {
+            display: inline-block;
+            padding: 8px 18px;
+            background-color: #2c3e50;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .home-btn:hover {
+            background-color: #34495e;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .btn-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .action-btn {
+            display: block;
+            padding: 12px 10px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .action-btn.empty {
+            background-color: #bdc3c7;
+        }
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+        .setup-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        input {
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        button.save-btn {
+            padding: 6px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎯 Terry's 自訂導航面板</h1>
+    
+    <div class="nav-bar">
+        <a href="links.html" class="home-btn">🏠 返回主頁導航</a>
+    </div>
+    
+    <p style="text-align: center; color: #7f8c8d; margin-top: 0;">直接在下方輸入名稱與網址，儲存後即可直接點擊使用！</p>
+    
+    <div class="grid" id="buttonGrid"></div>
+</div>
+
+<script>
+    const TOTAL_BUTTONS = 8;
+    const buttonGrid = document.getElementById('buttonGrid');
+
+    for (let i = 1; i <= TOTAL_BUTTONS; i++) {
+        const savedName = localStorage.getItem(`btn_name_${i}`) || `空白按鍵 ${i}`;
+        const savedUrl = localStorage.getItem(`btn_url_${i}`) || '';
+
+        const card = document.createElement('div');
+        card.className = 'btn-card';
+
+        const link = document.createElement('a');
+        link.href = savedUrl ? (savedUrl.startsWith('http') ? savedUrl : 'https://' + savedUrl) : '#';
+        link.target = '_blank'; 
+        link.innerText = savedName;
+        link.className = savedUrl ? 'action-btn' : 'action-btn empty';
+        if (!savedUrl) {
+            link.onclick = (e) => { e.preventDefault(); alert('請先在下方填寫網址並儲存！'); };
+        }
+
+        const setupDiv = document.createElement('div');
+        setupDiv.className = 'setup-inputs';
+        setupDiv.innerHTML = `
+            <input type="text" id="name_${i}" placeholder="按鈕名稱" value="${savedUrl ? savedName : ''}">
+            <input type="text" id="url_${i}" placeholder="https://..." value="${savedUrl}">
+            <button class="save-btn" onclick="saveButton(${i})">儲存設定</button>
+        `;
+
+        card.appendChild(link);
+        card.appendChild(setupDiv);
+        buttonGrid.appendChild(card);
+    }
+
+    function saveButton(id) {
+        const nameInput = document.getElementById(`name_${id}`).value.trim();
+        const urlInput = document.getElementById(`url_${id}`).value.trim();
+
+        if (!urlInput) {
+            localStorage.removeItem(`btn_name_${id}`);
+            localStorage.removeItem(`btn_url_${id}`);
+        } else {
+            const finalName = nameInput || `按鈕 ${id}`;
+            localStorage.setItem(`btn_name_${id}`, finalName);
+            localStorage.setItem(`btn_url_${id}`, urlInput);
+        }
+
+        alert(`按鈕 ${id} 設定已儲存！網頁將自動重新載入。`);
+        window.location.reload();
+    }
+</script>
+
+</body>
+</html>
