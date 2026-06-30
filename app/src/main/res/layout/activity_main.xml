@@ -4,6 +4,38 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <!-- 頂部外殼控制列 -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
+        android:background="#E5E7EB"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="TerryHub"
+            android:textColor="#374151"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- 基礎按鈕，移除任何特殊美化，確保 100% 通過編譯 -->
+        <Button
+            android:id="@+id/btn_home"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="回主頁"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- 網頁主體 -->
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+</LinearLayout>
