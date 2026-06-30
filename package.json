@@ -1,0 +1,37 @@
+{
+  "name": "terry-radio-player",
+  "version": "1.0.0",
+  "description": "Terry's Hub - Desktop Radio Player",
+  "main": "main.js",
+  "author": "Terry",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --x64",
+    "build": "electron-builder --win --x64"
+  },
+  "devDependencies": {
+    "electron": "23.3.13",
+    "electron-builder": "24.13.3"
+  },
+  "build": {
+    "appId": "com.terry.hub",
+    "productName": "Terry Radio Player",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "links.html",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    }
+  }
+}
