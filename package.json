@@ -23,13 +23,16 @@
     "files": [
       "main.js",
       "links.html",
+      "custom-hub.html",
       "package.json"
     ],
     "win": {
       "target": [
         {
           "target": "portable",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ]
     }
