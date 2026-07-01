@@ -139,6 +139,32 @@
       font-size: 0.85rem;
       color: var(--muted);
     }
+
+    /* =========================================================
+       自訂導航面板入口：略為突出但唔搶戲
+       用漸層 + 棕色描邊做小亮點，hover 會再深一啲
+       ========================================================= */
+    .hub-gate {
+      background: linear-gradient(135deg, #ffffff 0%, #f3e9d6 100%);
+      border-color: #b89b6f;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .hub-gate:hover {
+      background: linear-gradient(135deg, #efe6d4 0%, #e2d2b0 100%);
+      border-color: #8a6b3f;
+    }
+    @media (prefers-color-scheme: dark) {
+      .hub-gate {
+        background: linear-gradient(135deg, #2a2218 0%, #3a2c1a 100%);
+        border-color: #b89b6f;
+        color: #f5efe4;
+      }
+      .hub-gate:hover {
+        background: linear-gradient(135deg, #3a2c1a 0%, #4a3a24 100%);
+        border-color: #d8a657;
+      }
+    }
   </style>
 </head>
 <body>
@@ -204,6 +230,16 @@
          target="_blank"
          rel="noopener noreferrer">
         🕰️ 時光圖書館
+      </a>
+
+      <!-- =====================================================
+           🎯 自訂導航面板入口（同站跳轉 → custom-hub.html）
+           風格略為突出：線性漸層 + 棕色描邊，與其他 link-btn 和諧統一。
+           唔用 target="_blank"，等用戶保留喺 GitHub Pages 站內體驗。
+           ===================================================== -->
+      <a class="link-btn hub-gate"
+         href="custom-hub.html">
+        🎯 自訂導航面板
       </a>
 
       <!-- =====================================================
